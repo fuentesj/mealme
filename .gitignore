@@ -1,3 +1,4 @@
 Procfile
 *.log
+node_modules
 
