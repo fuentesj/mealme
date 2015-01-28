@@ -12,3 +12,4 @@ for (var i = 0; i < models.length; i++) {
 	require('./models/' + models[i])
 }
 
+require('./routes/apiRoutes.js')(app, passport)
