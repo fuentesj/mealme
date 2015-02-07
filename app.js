@@ -13,3 +13,5 @@ for (var i = 0; i < models.length; i++) {
 }
 
 require('./routes/apiRoutes.js')(app, passport)
+
+app.listen(4242)
