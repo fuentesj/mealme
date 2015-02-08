@@ -22,7 +22,7 @@ module.exports = function(app, passport) {
 
 	app.get("/trucks/:id", function(req, res) {
 
-		foodTruck.find({"_id": req.query.id}, function(err, truck) {
+		foodTruck.find({"_id": req.param("id")}, function(err, truck) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG)
 			} else {
