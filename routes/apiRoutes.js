@@ -3,12 +3,13 @@ module.exports = function(app, passport) {
 	var mongoose = require("mongoose")
 	var foodTruck = mongoose.model("FoodTruck")
 
+	var resultCountPerPage = 10
 	var INTERNAL_ERROR_MSG = "An internal error occurred."
 
 
 	app.get("/trucks", function(req, res) {
 
-		foodTruck.find({}, {}, {limit: 10}, function(err, truckCollection) {
+		foodTruck.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0 )}, function(err, truckCollection) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG)
 			} else {
