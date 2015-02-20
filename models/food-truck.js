@@ -8,7 +8,8 @@
  		latitude: Number
  	},
  	openingTime: {type: Date},
- 	closingTime: {type: Date}
+ 	closingTime: {type: Date},
+ 	subscribers: [{ type: ObjectId, ref: 'FoodTruckCustomer'}]
  });
 
  mongoose.model("FoodTruck", FoodTruckSchema);

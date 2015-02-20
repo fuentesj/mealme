@@ -6,7 +6,8 @@ var FoodTruckCustomerSchema = new Schema({
 	current_location: {
   		longitude: Number,
   		latitude: Number
-	}
+	},
+	truck_subscriptions: [{ type: ObjectId, ref: 'FoodTruck'}]
 });
 
 mongoose.model("FoodTruckCustomer", FoodTruckCustomerSchema);
