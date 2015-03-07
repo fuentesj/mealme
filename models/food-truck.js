@@ -9,7 +9,7 @@
  	},
  	openingTime: {type: Date},
  	closingTime: {type: Date},
- 	subscribers: [{ type: ObjectId, ref: 'FoodTruckCustomer'}]
+ 	//subscribers: [{ type: ObjectId, ref: 'FoodTruckCustomer'}]
  });
 
  mongoose.model("FoodTruck", FoodTruckSchema);

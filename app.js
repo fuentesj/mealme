@@ -2,7 +2,8 @@ var express 	= require("express"),
 	app 		= express(),
 	passport 	= require("passport"),
 	mongoose 	= require("mongoose"),
-	fs 			= require("fs");
+	fs 			= require("fs"),
+	bodyParser 	= require('body-parser')
 
 mongoose.connect('mongodb://localhost/mealme');
 
@@ -11,6 +12,8 @@ for (var i = 0; i < models.length; i++) {
 	if (models[i].indexOf('.js') === -1) continue;
 	require('./models/' + models[i])
 }
+
+app.use(bodyParser.json())
 
 require('./routes/apiRoutes.js')(app, passport)
 

@@ -1,10 +1,11 @@
 module.exports = function(app, passport) {
 
 	var mongoose = require("mongoose")
-	var foodTruck = mongoose.model("FoodTruck")
+	var FoodTruck = mongoose.model("FoodTruck")
 
 	var resultCountPerPage = 10
 	var INTERNAL_ERROR_MSG = "An internal error occurred."
+	var RESOURCE_CREATED_MSG = "Resource successfully created."
 
 
 	app.get("/trucks", function(req, res) {
@@ -29,6 +30,20 @@ module.exports = function(app, passport) {
 				return res.send(truck)
 			}
 		})
+	})
+
+
+	app.post("/trucks", function(req, res){
+
+		var foodTruck = new FoodTruck(req.body)
+		foodTruck.save(function(err) {
+			if (err) {
+				return res.status(500).send(INTERNAL_ERROR_MSG)
+			} else {
+				return res.status(201).send(RESOURCE_CREATED_MSG)
+			}
+		})
+
 	})
 
 
