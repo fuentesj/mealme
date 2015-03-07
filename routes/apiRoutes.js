@@ -10,11 +10,11 @@ module.exports = function(app, passport) {
 
 	app.get("/trucks", function(req, res) {
 
-		foodTruck.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0 )}, function(err, truckCollection) {
+		FoodTruck.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0 )}, function(err, truckCollection) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG)
 			} else {
-				return res.send(truckCollection)
+				return res.status(200).send(truckCollection)
 			}
 		})
 	})
@@ -23,11 +23,11 @@ module.exports = function(app, passport) {
 
 	app.get("/trucks/:id", function(req, res) {
 
-		foodTruck.find({"_id": req.param("id")}, function(err, truck) {
+		FoodTruck.find({"_id": req.param("id")}, function(err, truck) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG)
 			} else {
-				return res.send(truck)
+				return res.status(200).send(truck)
 			}
 		})
 	})
@@ -36,11 +36,11 @@ module.exports = function(app, passport) {
 	app.post("/trucks", function(req, res){
 
 		var foodTruck = new FoodTruck(req.body)
-		foodTruck.save(function(err) {
+		foodTruck.save(function(err, foodTruck) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG)
 			} else {
-				return res.status(201).send(RESOURCE_CREATED_MSG)
+				return res.status(201).json({id: foodTruck.id})
 			}
 		})
 
