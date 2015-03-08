@@ -25,7 +25,7 @@ module.exports = function(app, passport) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG);
 			} else {
-				return res.status(200).send(truck);
+				return res.type('json').status(200).send(truck[0]);
 			}
 		});
 	});
