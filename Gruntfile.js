@@ -6,7 +6,7 @@ module.exports = function(grunt){
 			file: ['app.js', 'routes/apiRoutes.js', 'models/*.js', 'tests/*.js'],
 		},
 		watch: {
-			files: ['<%= jshint.files %>'],
+			files: ['app.js', 'routes/apiRoutes.js', 'models/*.js', 'tests/*.js'],
 			tasks: ['jshint']
 		}
 	})
@@ -14,7 +14,7 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-contrib-jshint')
 	grunt.loadNpmTasks('grunt-contrib-watch')
 
-	grunt.registerTask('default', ['jshint'])
+	grunt.registerTask('default', ['watch'])
 
 }
 	
