@@ -18,7 +18,6 @@ module.exports = function(app, passport) {
 	});
 
 
-
 	app.get("/trucks/:id", function(req, res) {
 
 		FoodTruck.find({"_id": req.param("id")}, function(err, truck) {
@@ -41,7 +40,6 @@ module.exports = function(app, passport) {
 				return res.status(201).json({id: foodTruck.id});
 			}
 		});
-
 	});
 
 
