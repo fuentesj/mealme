@@ -2,6 +2,7 @@ module.exports = function(app, passport) {
 
 	var mongoose = require("mongoose");
 	var FoodTruck = mongoose.model("FoodTruck");
+	var FoodTruckCustomer = mongoose.model("FoodTruckCustomer");
 
 	var resultCountPerPage = 10;
 	var INTERNAL_ERROR_MSG = "An internal error occurred.";
@@ -35,7 +36,7 @@ module.exports = function(app, passport) {
 		var foodTruck = new FoodTruck(req.body);
 		foodTruck.save(function(err, foodTruck) {
 			if (err) {
-				return res.status(500).send(INTERNAL_ERROR_MSG);
+				return res.status(409).send(INTERNAL_ERROR_MSG);
 			} else {
 				return res.status(201).json({id: foodTruck.id});
 			}
@@ -75,6 +76,26 @@ module.exports = function(app, passport) {
 
 	app.get("/customers/:id", function(req, res) {
 
+		FoodTruckCustomer.findOne({"_id": req.param("id")}, function(err, customer) {
+			if (err) {
+				return res.status(400).send();
+			} else {
+				return res.type('json').status(200).send(customer);
+			}
+		});
+	});
+
+
+	app.post("/customers", function(req, res) {
+
+		var foodTruckCustomer = new FoodTruckCustomer(req.body);
+		foodTruckCustomer.save(function(err, foodTruckCustomer) {
+			if (err) {
+				return res.status(409);
+			} else {
+				return res.status(201).json({id: foodTruckCustomer.id});
+			}
+		});
 	});
 
 

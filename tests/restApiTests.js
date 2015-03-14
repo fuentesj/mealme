@@ -8,7 +8,9 @@ var testingHost = "localhost",
  	testTruckLat = 37.7,
  	testTruckLong = -122.4,
  	postedTruckName = "Truck ABC",
- 	postedTruckId = null;
+ 	postedTruckId = null,
+ 	testCustomerName = "John Doe",
+ 	testCustomerId = null;
 
 
 describe('truck time rest api server', function(){
@@ -25,8 +27,26 @@ describe('truck time rest api server', function(){
 			})
 			.end(function(res){
 				testTruckId = res.body.id;
-				done();
 			});
+
+		console.log("finished first POST");
+
+		superagent
+			.post("http://" + testingHost + ":" + testingPort + "/customers")
+			.send({
+				name: testCustomerName
+			})
+			.end(function(res) {
+				testCustomerId = res.body.id;
+			});
+
+		console.log("finished second POST");
+
+		if (testTruckId && testCustomerId) {
+			console.log("neither are null");
+		} else {
+			console.log("one or both are null");
+		}
 	});
 
 	after(function(done) {
@@ -72,6 +92,16 @@ describe('truck time rest api server', function(){
 	});
 
 
+	it('can successfully GET a food truck customer', function(done){
+		console.log("customer id: " + testCustomerId);
+		superagent
+			.get("http://" + testingHost + ":" + testingPort + "/customers" + testCustomerId)
+			.end(function(res) {
+				console.log(res.body.id);
+				done();
+				
+			});
+	});
 
 
 
