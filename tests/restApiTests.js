@@ -6,7 +6,9 @@ var testingHost = "localhost",
  	testTruckName = "Test Truck",
  	testTruckId = null,
  	testTruckLat = 37.7,
- 	testTruckLong = -122.4;
+ 	testTruckLong = -122.4,
+ 	postedTruckName = "Truck ABC",
+ 	postedTruckId = null;
 
 
 describe('truck time rest api server', function(){
@@ -23,6 +25,22 @@ describe('truck time rest api server', function(){
 			})
 			.end(function(res){
 				testTruckId = res.body.id;
+				done();
+			});
+	});
+
+	after(function(done) {
+		superagent
+			.del("http://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
+			.end(function(res) {
+				expect(res.status).to.eql(200);
+				done();
+			});
+
+		superagent
+			.del("http://" + testingHost + ":" + testingPort + "/trucks/" + postedTruckId)
+			.end(function(res) { 
+				expect(res.status).to.eql(200);
 				done();
 			});
 	});
@@ -45,12 +63,18 @@ describe('truck time rest api server', function(){
 	it('can successfully POST a new food truck', function(done){
 		superagent
 			.post("http://" + testingHost + ":" + testingPort + "/trucks")
-			.send({name: "Truck c"})
+			.send({name: postedTruckName})
 		    .end(function(res){
+		    	postedTruckId = res.body.id;
 		    	expect(res.status).to.eql(201);
 		      	done();
 			});
 	});
+
+
+
+
+
 
 
 });

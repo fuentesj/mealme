@@ -42,6 +42,17 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.delete("/trucks/:id", function(req, res) {
+
+		FoodTruck.find({"_id": req.param("id")}).remove(function(err, truck) {
+			if (err) {
+				return res.status(400).send();
+			} else {
+				return res.status(200).send();
+			}
+		});
+	});
+
 
 
 	app.get("/trucks/:id/menu", function(req, res) {
