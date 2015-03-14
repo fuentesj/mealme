@@ -20,11 +20,11 @@ module.exports = function(app, passport) {
 
 	app.get("/trucks/:id", function(req, res) {
 
-		FoodTruck.find({"_id": req.param("id")}, function(err, truck) {
+		FoodTruck.findOne({"_id": req.param("id")}, function(err, truck) {
 			if (err) {
 				return res.status(500).send(INTERNAL_ERROR_MSG);
 			} else {
-				return res.type('json').status(200).send(truck[0]);
+				return res.type('json').status(200).send(truck);
 			}
 		});
 	});
