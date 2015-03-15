@@ -98,6 +98,17 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.delete("/customers/:id", function(req, res) {
+
+		FoodTruckCustomer.find({"_id": req.param("id")}).remove(function(err, customer) {
+			if (err) {
+				return res.status(400).send();
+			} else {
+				return res.status(200).send();
+			}
+		});
+	});
+
 
 
 	app.get("/customers/:id/subscriptions", function(req, res) {

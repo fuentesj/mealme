@@ -63,7 +63,14 @@ describe('truck time rest api server', function(){
 				 		callback();
 				 	});
 			},
-			
+			function(callback) {
+				superagent
+					.del("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
+					.end(function(err, res) {
+						expect(res.status).to.eql(200);
+						callback();
+					})
+			}
 
 		], done);
 	});
@@ -99,7 +106,7 @@ describe('truck time rest api server', function(){
 		superagent
 			.get("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
 			.end(function(err, res) {
-				expect(res.body.name).to.eql(testCustomerName)
+				expect(res.body.name).to.eql(testCustomerName);
 				done();
 				
 			});
