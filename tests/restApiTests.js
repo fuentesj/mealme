@@ -24,8 +24,12 @@ describe('truck time rest api server', function(){
 					.post("http://" + testingHost + ":" + testingPort + "/customers")
 					.send({name: testCustomerName})
 					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						}
+
 						testCustomerId = res.body.id;
-						callback();
+						callback(false, 1);
 					});
 			},
 			function(callback) {
@@ -36,11 +40,17 @@ describe('truck time rest api server', function(){
 						last_known_location: [testTruckLat, testTruckLong]
 					})
 					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						}
+
 						testTruckId = res.body.id;
-						callback();
+						callback(false, 2);
 					});
 			}
-		], done);
+		], function (err, results) {
+			done();
+		});
 	});
 
 	after("Tear down test data after all tests have finished", function(done) {
@@ -71,7 +81,6 @@ describe('truck time rest api server', function(){
 						callback();
 					})
 			}
-
 		], done);
 	});
 
