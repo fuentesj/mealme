@@ -3,6 +3,8 @@ var express 	= require("express"),
 	passport 	= require("passport"),
 	mongoose 	= require("mongoose"),
 	fs 			= require("fs"),
+	https 		= require('https'),
+	http 		= require('http'),
 	bodyParser 	= require('body-parser');
 
 mongoose.connect('mongodb://localhost/mealme');
@@ -15,4 +17,10 @@ for (var i = 0; i < models.length; i++) {
 
 app.use(bodyParser.json());
 require('./routes/apiRoutes.js')(app, passport);
-app.listen(4242);
+http.createServer(app).listen(8888);
+https.createServer({
+	key: fs.readFileSync('./ssl/key.pem'),
+	cert:fs.readFileSync('./ssl/cert.pem'),
+}, app).listen(8443);
+
+

@@ -3,7 +3,7 @@ var superagent 	= require('superagent'),
 	async		= require('async');
 
 var testingHost = "localhost",
-	testingPort = "4242",
+	testingPort = "8888",
  	testTruckName = "Test Truck",
  	testTruckId = null,
  	testTruckLat = 37.7,
