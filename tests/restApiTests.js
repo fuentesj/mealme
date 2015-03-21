@@ -11,7 +11,9 @@ var testingHost = "localhost",
  	postedTruckName = "Truck ABC",
  	postedTruckId = null,
  	testCustomerName = "John Doe",
- 	testCustomerId = null;
+ 	testCustomerId = null,
+ 	postedCustomerName = "Jane Doe",
+ 	postedCustomerId = null;
 
 
 describe('truck time rest api server', function(){
@@ -29,7 +31,7 @@ describe('truck time rest api server', function(){
 						}
 
 						testCustomerId = res.body.id;
-						callback(false, 1);
+						callback();
 					});
 			},
 			function(callback) {
@@ -45,11 +47,16 @@ describe('truck time rest api server', function(){
 						}
 
 						testTruckId = res.body.id;
-						callback(false, 2);
+						callback();
 					});
 			}
-		], function (err, results) {
-			done();
+		], function (err) {
+			if (err) {
+				var error = new Error(err);
+				console.log(error);
+			} else {
+				done();
+			}
 		});
 	});
 
@@ -60,6 +67,9 @@ describe('truck time rest api server', function(){
 				superagent
 				 	.del("http://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
 				 	.end(function(err, res) {
+				 		if (err) {
+				 			callback(err);
+				 		}
 				 		expect(res.status).to.eql(200);
 				 		callback();
 				 	});
@@ -68,7 +78,10 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 				 	.del("http://" + testingHost + ":" + testingPort + "/trucks/" + postedTruckId)
-				 	.end(function(err, res) { 
+				 	.end(function(err, res) {
+				 		if (err) {
+				 			callback(err);
+				 		}
 				 		expect(res.status).to.eql(200);
 				 		callback();
 				 	});
@@ -77,11 +90,32 @@ describe('truck time rest api server', function(){
 				superagent
 					.del("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
 					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						}
 						expect(res.status).to.eql(200);
 						callback();
-					})
+					});
+			}, 
+			function(callback) {
+				superagent
+					.del("http://" + testingHost + ":" + testingPort + "/customers/" + postedCustomerId)
+					.end(function(err, res){
+						if (err) {
+							callback(err);
+						}
+						expect(res.status).to.eql(200);
+						callback();
+					});
 			}
-		], done);
+		], function(err) {
+			if (err) {
+				var error = new Error(err);
+				console.log(err);
+			} else {
+				done();
+			}
+		});
 	});
 
 
@@ -120,4 +154,17 @@ describe('truck time rest api server', function(){
 				
 			});
 	});
+
+	
+	it('can successfully POST a new food truck customer', function(done){
+		superagent	
+			.post("http://" + testingHost + ":" + testingPort + "/customers/")
+			.send({name: postedCustomerName})
+			.end(function(err, res){
+				postedCustomerId = res.body.id;
+				expect(res.status, 201);
+				done();
+			});
+	});
+
 });
