@@ -7,7 +7,7 @@ module.exports = function(app, passport) {
 	var resultCountPerPage = 10;
 	var INTERNAL_ERROR_MSG = "An internal error occurred.";
 
-	app.get("/trucks", function(req, res) {
+	app.get("/trucks", passport.authenticate('basic', { session: false}), function(req, res) {
 
 		FoodTruck.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0 )}, function(err, truckCollection) {
 			if (err) {
@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.get("/trucks/:id", function(req, res) {
+	app.get("/trucks/:id", passport.authenticate('basic', { session: false}), function(req, res) {
 
 		FoodTruck.findOne({"_id": req.param("id")}, function(err, truck) {
 			if (err) {
@@ -31,7 +31,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.post("/trucks", function(req, res){
+	app.post("/trucks", passport.authenticate('basic', { session: false}), function(req, res){
 
 		var foodTruck = new FoodTruck(req.body);
 		foodTruck.save(function(err, foodTruck) {
@@ -43,7 +43,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.delete("/trucks/:id", function(req, res) {
+	app.delete("/trucks/:id", passport.authenticate('basic', { session: false}), function(req, res) {
 
 		FoodTruck.find({"_id": req.param("id")}).remove(function(err, truck) {
 			if (err) {
@@ -74,7 +74,7 @@ module.exports = function(app, passport) {
 
 
 
-	app.get("/customers/:id", function(req, res) {
+	app.get("/customers/:id", passport.authenticate('basic', { session: false }), function(req, res) {
 
 		FoodTruckCustomer.findOne({"_id": req.param("id")}, function(err, customer) {
 			if (err) {
@@ -86,7 +86,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.post("/customers", function(req, res) {
+	app.post("/customers", passport.authenticate('basic', { session: false }), function(req, res) {
 
 		var foodTruckCustomer = new FoodTruckCustomer(req.body);
 		foodTruckCustomer.save(function(err, foodTruckCustomer) {
@@ -98,7 +98,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.delete("/customers/:id", function(req, res) {
+	app.delete("/customers/:id", passport.authenticate('basic', { session: false }), function(req, res) {
 
 		FoodTruckCustomer.find({"_id": req.param("id")}).remove(function(err, customer) {
 			if (err) {

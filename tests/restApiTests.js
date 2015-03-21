@@ -13,7 +13,9 @@ var testingHost = "localhost",
  	testCustomerName = "John Doe",
  	testCustomerId = null,
  	postedCustomerName = "Jane Doe",
- 	postedCustomerId = null;
+ 	postedCustomerId = null,
+ 	testUserName = "admin",
+ 	testUserPassword = "abc12345";
 
 
 describe('truck time rest api server', function(){
@@ -24,6 +26,7 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 					.post("http://" + testingHost + ":" + testingPort + "/customers")
+					.auth(testUserName, testUserPassword)
 					.send({name: testCustomerName})
 					.end(function(err, res) {
 						if (err) {
@@ -37,6 +40,7 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 					.post("http://" + testingHost + ":" + testingPort + "/trucks")
+					.auth(testUserName, testUserPassword)
 					.send({
 						name: testTruckName,
 						last_known_location: [testTruckLat, testTruckLong]
@@ -66,6 +70,7 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 				 	.del("http://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
+				 	.auth(testUserName, testUserPassword)
 				 	.end(function(err, res) {
 				 		if (err) {
 				 			callback(err);
@@ -78,6 +83,7 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 				 	.del("http://" + testingHost + ":" + testingPort + "/trucks/" + postedTruckId)
+				 	.auth(testUserName, testUserPassword)
 				 	.end(function(err, res) {
 				 		if (err) {
 				 			callback(err);
@@ -89,6 +95,7 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 					.del("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
+					.auth(testUserName, testUserPassword)
 					.end(function(err, res) {
 						if (err) {
 							callback(err);
@@ -100,6 +107,7 @@ describe('truck time rest api server', function(){
 			function(callback) {
 				superagent
 					.del("http://" + testingHost + ":" + testingPort + "/customers/" + postedCustomerId)
+					.auth(testUserName, testUserPassword)
 					.end(function(err, res){
 						if (err) {
 							callback(err);
@@ -122,6 +130,7 @@ describe('truck time rest api server', function(){
 	it('can successfully GET an existing truck', function(done){
 		superagent
 			.get("http://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
+			.auth(testUserName, testUserPassword)
 			.end(function(err, res){
 				expect(res.body.name).to.eql(testTruckName);
 				var lastKnownLocationArray = res.body.last_known_location.split(",");
@@ -136,6 +145,7 @@ describe('truck time rest api server', function(){
 	it('can successfully POST a new food truck', function(done){
 		superagent
 			.post("http://" + testingHost + ":" + testingPort + "/trucks")
+			.auth(testUserName, testUserPassword)
 			.send({name: postedTruckName})
 		    .end(function(err, res){
 		    	postedTruckId = res.body.id;
@@ -148,6 +158,7 @@ describe('truck time rest api server', function(){
 	it('can successfully GET a food truck customer', function(done){
 		superagent
 			.get("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
+			.auth(testUserName, testUserPassword)
 			.end(function(err, res) {
 				expect(res.body.name).to.eql(testCustomerName);
 				done();
@@ -159,10 +170,24 @@ describe('truck time rest api server', function(){
 	it('can successfully POST a new food truck customer', function(done){
 		superagent	
 			.post("http://" + testingHost + ":" + testingPort + "/customers/")
+			.auth(testUserName, testUserPassword)
 			.send({name: postedCustomerName})
 			.end(function(err, res){
 				postedCustomerId = res.body.id;
-				expect(res.status, 201);
+				expect(res.status).to.eql(201);
+				done();
+			});
+	});
+
+
+	xit('can successfully stop an unauthorized user from making a API call', function(done){
+		superagent
+			.get('http://' + testingHost + ":" + testingPort + "/customers/")
+			.auth('fakeUser', 'fakePassword')
+			.end(function(err, res){
+				console.log("res: " + res);
+				console.log("err: " + err);
+				expect(res.status).to.eql(403);
 				done();
 			});
 	});
