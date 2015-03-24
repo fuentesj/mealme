@@ -15,12 +15,15 @@ var testingHost = "localhost",
  	postedCustomerName = "Jane Doe",
  	postedCustomerId = null,
  	testUserName = "admin",
- 	testUserPassword = "abc12345";
+ 	testUserPassword = "abc12345",
+ 	subscribedTruckId = null,
+ 	subscribedCustomerId = null;
 
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 
 describe('truck time rest api server', function(){
+
 
 	before("Set up test data before any test begins", function(done) {
 
@@ -53,6 +56,19 @@ describe('truck time rest api server', function(){
 						}
 
 						testTruckId = res.body.id;
+						callback();
+					});
+			},
+			function(callback) {
+				superagent	
+					.post("https://" + testingHost + ":" + testingPort + "/trucks")
+					.auth(testUserName, testUserPassword)
+					.send({name: "subscribedTruck1"})
+					.end(function(err, res){
+						if (err) {
+							callback(err);
+						}
+						subscribedTruckId = res.body.id;
 						callback();
 					});
 			}
@@ -117,6 +133,32 @@ describe('truck time rest api server', function(){
 						expect(res.status).to.eql(200);
 						callback();
 					});
+			},
+			function(callback) {
+				superagent
+					.del("https://" + testingHost + ":" + testingPort + "/customers/" + subscribedCustomerId)
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res){
+						if (err){
+							callback(err);
+						} else {
+							expect(res.status).to.eql(200);
+							callback();
+						}
+					});
+			},
+			function(callback){
+				superagent
+					.del("https://" + testingHost + ":" + testingPort + "/trucks/" + subscribedTruckId)
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res){
+						if (err){
+							callback(err);
+						} else {
+							expect(res.status).to.eql(200);
+							callback();
+						}
+					});
 			}
 		], function(err) {
 			if (err) {
@@ -127,6 +169,7 @@ describe('truck time rest api server', function(){
 			}
 		});
 	});
+
 
 
 	it('can successfully GET an existing truck', function(done){
@@ -192,6 +235,55 @@ describe('truck time rest api server', function(){
 				expect(res.status).to.eql(403);
 				done();
 			});
+	});
+
+	it('can successfully POST and GET a Customer with multiple food truck subcriptions', function(done){
+
+		var subcriptions = [];
+		subcriptions.push(subscribedTruckId);
+		var customerWithSubscriptionsName = "Subscriptions Customer";
+		var customerWithSubscriptions = {
+			name: customerWithSubscriptionsName,
+			truck_subscriptions: subcriptions
+		};
+
+		async.series([
+			function(callback){
+				superagent
+					.post("https://" + testingHost + ":" + testingPort + "/customers/")
+					.auth(testUserName, testUserPassword)
+					.send(customerWithSubscriptions)
+					.end(function(err, res){
+						if (err) {
+							callback(err);
+						} else {
+							subscribedCustomerId = res.body.id;
+							expect(res.status).to.eql(201);
+							callback();
+						}
+					});
+			}, 
+			function(callback){
+				superagent
+					.get("https://" + testingHost + ":" + testingPort + "/customers/" + subscribedCustomerId)
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res){
+						if (err) {
+							callback(err);
+						} else {
+							expect(res.body.truck_subscriptions[0]).to.eql(subscribedTruckId);
+							callback();
+						}
+					});
+			}
+		], function(err){
+			if (err) {
+				console.log(err);
+			} else {
+				done();
+			}
+		});
+
 	});
 
 });
