@@ -3,7 +3,7 @@ var superagent 	= require('superagent'),
 	async		= require('async');
 
 var testingHost = "localhost",
-	testingPort = "8888",
+	testingPort = "8443",
  	testTruckName = "Test Truck",
  	testTruckId = null,
  	testTruckLat = 37.7,
@@ -17,6 +17,8 @@ var testingHost = "localhost",
  	testUserName = "admin",
  	testUserPassword = "abc12345";
 
+ 	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 
 describe('truck time rest api server', function(){
 
@@ -25,7 +27,7 @@ describe('truck time rest api server', function(){
 		async.series([
 			function(callback) {
 				superagent
-					.post("http://" + testingHost + ":" + testingPort + "/customers")
+					.post("https://" + testingHost + ":" + testingPort + "/customers")
 					.auth(testUserName, testUserPassword)
 					.send({name: testCustomerName})
 					.end(function(err, res) {
@@ -39,7 +41,7 @@ describe('truck time rest api server', function(){
 			},
 			function(callback) {
 				superagent
-					.post("http://" + testingHost + ":" + testingPort + "/trucks")
+					.post("https://" + testingHost + ":" + testingPort + "/trucks")
 					.auth(testUserName, testUserPassword)
 					.send({
 						name: testTruckName,
@@ -69,7 +71,7 @@ describe('truck time rest api server', function(){
 		async.series([
 			function(callback) {
 				superagent
-				 	.del("http://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
+				 	.del("https://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
 				 	.auth(testUserName, testUserPassword)
 				 	.end(function(err, res) {
 				 		if (err) {
@@ -82,7 +84,7 @@ describe('truck time rest api server', function(){
 			},
 			function(callback) {
 				superagent
-				 	.del("http://" + testingHost + ":" + testingPort + "/trucks/" + postedTruckId)
+				 	.del("https://" + testingHost + ":" + testingPort + "/trucks/" + postedTruckId)
 				 	.auth(testUserName, testUserPassword)
 				 	.end(function(err, res) {
 				 		if (err) {
@@ -94,7 +96,7 @@ describe('truck time rest api server', function(){
 			},
 			function(callback) {
 				superagent
-					.del("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
+					.del("https://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
 					.auth(testUserName, testUserPassword)
 					.end(function(err, res) {
 						if (err) {
@@ -106,7 +108,7 @@ describe('truck time rest api server', function(){
 			}, 
 			function(callback) {
 				superagent
-					.del("http://" + testingHost + ":" + testingPort + "/customers/" + postedCustomerId)
+					.del("https://" + testingHost + ":" + testingPort + "/customers/" + postedCustomerId)
 					.auth(testUserName, testUserPassword)
 					.end(function(err, res){
 						if (err) {
@@ -129,7 +131,7 @@ describe('truck time rest api server', function(){
 
 	it('can successfully GET an existing truck', function(done){
 		superagent
-			.get("http://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
+			.get("https://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
 			.auth(testUserName, testUserPassword)
 			.end(function(err, res){
 				expect(res.body.name).to.eql(testTruckName);
@@ -144,7 +146,7 @@ describe('truck time rest api server', function(){
 
 	it('can successfully POST a new food truck', function(done){
 		superagent
-			.post("http://" + testingHost + ":" + testingPort + "/trucks")
+			.post("https://" + testingHost + ":" + testingPort + "/trucks")
 			.auth(testUserName, testUserPassword)
 			.send({name: postedTruckName})
 		    .end(function(err, res){
@@ -157,7 +159,7 @@ describe('truck time rest api server', function(){
 
 	it('can successfully GET a food truck customer', function(done){
 		superagent
-			.get("http://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
+			.get("https://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
 			.auth(testUserName, testUserPassword)
 			.end(function(err, res) {
 				expect(res.body.name).to.eql(testCustomerName);
@@ -169,7 +171,7 @@ describe('truck time rest api server', function(){
 	
 	it('can successfully POST a new food truck customer', function(done){
 		superagent	
-			.post("http://" + testingHost + ":" + testingPort + "/customers/")
+			.post("https://" + testingHost + ":" + testingPort + "/customers/")
 			.auth(testUserName, testUserPassword)
 			.send({name: postedCustomerName})
 			.end(function(err, res){
@@ -182,7 +184,7 @@ describe('truck time rest api server', function(){
 
 	xit('can successfully stop an unauthorized user from making a API call', function(done){
 		superagent
-			.get('http://' + testingHost + ":" + testingPort + "/customers/")
+			.get('https://' + testingHost + ":" + testingPort + "/customers/")
 			.auth('fakeUser', 'fakePassword')
 			.end(function(err, res){
 				console.log("res: " + res);
