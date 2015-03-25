@@ -21,13 +21,15 @@ module.exports = function(app, passport) {
 
 	app.get("/trucks/:id", passport.authenticate('basic', { session: false}), function(req, res) {
 
-		FoodTruck.findOne({"_id": req.param("id")}, function(err, truck) {
-			if (err) {
-				return res.status(500).send(INTERNAL_ERROR_MSG);
-			} else {
-				return res.type('json').status(200).send(truck);
-			}
-		});
+		FoodTruck
+			.findOne({"_id": req.param("id")}, function(err, truck) {
+				if (err) {
+					return res.status(500).send(INTERNAL_ERROR_MSG);
+				} else {
+					return res.type('json').status(200).send(truck);
+				}
+			})
+			.populate("subscribers");
 	});
 
 
@@ -36,6 +38,7 @@ module.exports = function(app, passport) {
 		var foodTruck = new FoodTruck(req.body);
 		foodTruck.save(function(err, foodTruck) {
 			if (err) {
+				console.log("error: " + err);
 				return res.status(409).send(INTERNAL_ERROR_MSG);
 			} else {
 				return res.status(201).json({id: foodTruck.id});

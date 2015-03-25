@@ -17,6 +17,10 @@ var testingHost = "localhost",
  	testUserName = "admin",
  	testUserPassword = "abc12345",
  	subscribedTruckId = null,
+ 	subscribedTruckName = "subscribedTruck1",
+ 	customerWithMultipleSubscriptionsId = null,
+ 	truckWithSubscribersId = null,
+ 	subscribedCustomerName = "subscribedCustomerName",
  	subscribedCustomerId = null;
 
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -63,13 +67,27 @@ describe('truck time rest api server', function(){
 				superagent	
 					.post("https://" + testingHost + ":" + testingPort + "/trucks")
 					.auth(testUserName, testUserPassword)
-					.send({name: "subscribedTruck1"})
+					.send({name: subscribedTruckName})
 					.end(function(err, res){
 						if (err) {
 							callback(err);
 						}
 						subscribedTruckId = res.body.id;
 						callback();
+					});
+			},
+			function(callback) {
+				superagent
+					.post("https://" + testingHost + ":" + testingPort + "/customers")
+					.auth(testUserName, testUserPassword)
+					.send({name: subscribedCustomerName})
+					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						} else {
+							subscribedCustomerId = res.body.id;
+							callback();
+						}
 					});
 			}
 		], function (err) {
@@ -136,7 +154,7 @@ describe('truck time rest api server', function(){
 			},
 			function(callback) {
 				superagent
-					.del("https://" + testingHost + ":" + testingPort + "/customers/" + subscribedCustomerId)
+					.del("https://" + testingHost + ":" + testingPort + "/customers/" + customerWithMultipleSubscriptionsId)
 					.auth(testUserName, testUserPassword)
 					.end(function(err, res){
 						if (err){
@@ -159,6 +177,32 @@ describe('truck time rest api server', function(){
 							callback();
 						}
 					});
+			},
+			function(callback) {
+				superagent
+					.del("https://" + testingHost + ":" + testingPort + "/trucks/" + truckWithSubscribersId)
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						} else {
+							expect(res.status).to.eql(200);
+							callback();
+						}
+					});
+			},
+			function(callback) {
+				superagent
+					.del("https://" + testingHost + ":" + testingPort + "/customers/" + subscribedCustomerId)
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						} else {
+							expect(res.status).to.eql(200);
+							callback();
+						}
+					})
 			}
 		], function(err) {
 			if (err) {
@@ -257,7 +301,7 @@ describe('truck time rest api server', function(){
 						if (err) {
 							callback(err);
 						} else {
-							subscribedCustomerId = res.body.id;
+							customerWithMultipleSubscriptionsId = res.body.id;
 							expect(res.status).to.eql(201);
 							callback();
 						}
@@ -265,26 +309,83 @@ describe('truck time rest api server', function(){
 			}, 
 			function(callback){
 				superagent
-					.get("https://" + testingHost + ":" + testingPort + "/customers/" + subscribedCustomerId)
+					.get("https://" + testingHost + ":" + testingPort + "/customers/" + customerWithMultipleSubscriptionsId)
 					.auth(testUserName, testUserPassword)
 					.end(function(err, res){
 						if (err) {
 							callback(err);
 						} else {
-							console.log(res.body);
 							expect(res.body.truck_subscriptions[0]._id).to.eql(subscribedTruckId);
+							expect(res.body.truck_subscriptions[0].name).to.eql(subscribedTruckName);
 							callback();
 						}
 					});
 			}
-		], function(err){
+		], function(err) {
+				if (err) {
+					console.log(err);
+				} else {
+					done();
+				}
+		});
+
+	});
+
+
+	it('can successfully POST and GET a Food Truck with multiple subscribers', function(done){
+
+		var subscribedCustomers = [];
+		subscribedCustomers.push(subscribedCustomerId);
+		var truckWithSubscribersName = "truckWithSubscribersName";
+		var truckWithSubscribers = {
+			name: truckWithSubscribersName,
+			subscribers: subscribedCustomers
+		};
+
+
+		async.series([
+			function(callback) {
+				superagent
+					.post("https://" + testingHost + ":" + testingPort + "/trucks")
+					.auth(testUserName, testUserPassword)
+					.send(truckWithSubscribers)
+					.end(function(err, res) {
+						if (err) {
+							callback(err);
+						} else {
+							expect(res.status).to.eql(201);
+							truckWithSubscribersId = res.body.id;
+							callback();
+						}
+					});
+			},
+			function(callback) {
+				superagent
+					.get("https://" + testingHost + ":" + testingPort + "/trucks/" + truckWithSubscribersId)
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res) {
+						if(err) {
+							console.log(err);
+							callback(err);
+						} else {
+							expect(res.status).to.eql(200);
+							expect(res.body.name).to.eql("truckWithSubscribersName");
+							expect(res.body.subscribers[0].name).to.equal("subscribedCustomerName");
+							callback();
+						}
+					});
+
+			 }
+		], function(err) {
 			if (err) {
 				console.log(err);
 			} else {
 				done();
 			}
-		});
 
+		});
 	});
+
+
 
 });

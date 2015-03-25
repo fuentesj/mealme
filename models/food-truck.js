@@ -9,7 +9,10 @@ var FoodTruckSchema = new Schema({
 	},
 	openingTime: {type: Date},
 	closingTime: {type: Date},
-	//subscribers: [{ type: ObjectId, ref: 'FoodTruckCustomer'}]
+	subscribers: [{ 
+		type: Schema.Types.ObjectId,
+		ref: 'FoodTruckCustomer'
+	}]
 });
 
 mongoose.model("FoodTruck", FoodTruckSchema);
