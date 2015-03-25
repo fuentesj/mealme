@@ -58,23 +58,9 @@ module.exports = function(app, passport) {
 	});
 
 
-
-	app.get("/trucks/:id/menu", function(req, res) {
-
-	});
-
-
-
-	app.get("/trucks/:id/subscribers", function(req, res) {
-
-	});
-
-
-
 	app.get("/customers", function(req, res) {
 
 	});
-
 
 
 	app.get("/customers/:id", passport.authenticate('basic', { session: false }), function(req, res) {
@@ -112,12 +98,6 @@ module.exports = function(app, passport) {
 				return res.status(200).send();
 			}
 		});
-	});
-
-
-
-	app.get("/customers/:id/subscriptions", function(req, res) {
-
 	});
 	
 };
