@@ -271,7 +271,8 @@ describe('truck time rest api server', function(){
 						if (err) {
 							callback(err);
 						} else {
-							expect(res.body.truck_subscriptions[0]).to.eql(subscribedTruckId);
+							console.log(res.body);
+							expect(res.body.truck_subscriptions[0]._id).to.eql(subscribedTruckId);
 							callback();
 						}
 					});

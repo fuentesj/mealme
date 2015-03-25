@@ -76,13 +76,15 @@ module.exports = function(app, passport) {
 
 	app.get("/customers/:id", passport.authenticate('basic', { session: false }), function(req, res) {
 
-		FoodTruckCustomer.findOne({"_id": req.param("id")}, function(err, customer) {
-			if (err) {
-				return res.status(400).send();
-			} else {
-				return res.type('json').status(200).send(customer);
-			}
-		});
+		FoodTruckCustomer
+			.findOne({"_id": req.param("id")}, function(err, customer){
+				if (err) {
+					return res.status(400).send();
+				} else {
+					return res.type('json').status(200).send(customer);
+				}
+			})
+			.populate("truck_subscriptions");
 	});
 
 
