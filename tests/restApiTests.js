@@ -26,7 +26,7 @@ var testingHost = "localhost",
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 
-describe('truck time rest api server', function(){
+describe('truck time rest api server', function() {
 
 
 	before("Set up test data before any test begins", function(done) {
@@ -68,7 +68,7 @@ describe('truck time rest api server', function(){
 					.post("https://" + testingHost + ":" + testingPort + "/trucks")
 					.auth(testUserName, testUserPassword)
 					.send({name: subscribedTruckName})
-					.end(function(err, res){
+					.end(function(err, res) {
 						if (err) {
 							callback(err);
 						}
@@ -90,7 +90,7 @@ describe('truck time rest api server', function(){
 						}
 					});
 			}
-		], function (err) {
+		], function(err) {
 			if (err) {
 				var error = new Error(err);
 				console.log(error);
@@ -144,7 +144,7 @@ describe('truck time rest api server', function(){
 				superagent
 					.del("https://" + testingHost + ":" + testingPort + "/customers/" + postedCustomerId)
 					.auth(testUserName, testUserPassword)
-					.end(function(err, res){
+					.end(function(err, res) {
 						if (err) {
 							callback(err);
 						}
@@ -156,7 +156,7 @@ describe('truck time rest api server', function(){
 				superagent
 					.del("https://" + testingHost + ":" + testingPort + "/customers/" + customerWithMultipleSubscriptionsId)
 					.auth(testUserName, testUserPassword)
-					.end(function(err, res){
+					.end(function(err, res) {
 						if (err){
 							callback(err);
 						} else {
@@ -169,7 +169,7 @@ describe('truck time rest api server', function(){
 				superagent
 					.del("https://" + testingHost + ":" + testingPort + "/trucks/" + subscribedTruckId)
 					.auth(testUserName, testUserPassword)
-					.end(function(err, res){
+					.end(function(err, res) {
 						if (err){
 							callback(err);
 						} else {
@@ -202,7 +202,7 @@ describe('truck time rest api server', function(){
 							expect(res.status).to.eql(200);
 							callback();
 						}
-					})
+					});
 			}
 		], function(err) {
 			if (err) {
@@ -213,7 +213,6 @@ describe('truck time rest api server', function(){
 			}
 		});
 	});
-
 
 
 	it('can successfully GET an existing truck', function(done){
@@ -251,7 +250,6 @@ describe('truck time rest api server', function(){
 			.end(function(err, res) {
 				expect(res.body.name).to.eql(testCustomerName);
 				done();
-				
 			});
 	});
 
@@ -280,6 +278,7 @@ describe('truck time rest api server', function(){
 				done();
 			});
 	});
+
 
 	it('can successfully POST and GET a Customer with multiple food truck subcriptions', function(done){
 
@@ -385,7 +384,5 @@ describe('truck time rest api server', function(){
 
 		});
 	});
-
-
 
 });

@@ -33,7 +33,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.post("/trucks", passport.authenticate('basic', { session: false}), function(req, res){
+	app.post("/trucks", passport.authenticate('basic', { session: false}), function(req, res) {
 
 		var foodTruck = new FoodTruck(req.body);
 		foodTruck.save(function(err, foodTruck) {
@@ -45,6 +45,7 @@ module.exports = function(app, passport) {
 			}
 		});
 	});
+
 
 	app.delete("/trucks/:id", passport.authenticate('basic', { session: false}), function(req, res) {
 
@@ -88,6 +89,7 @@ module.exports = function(app, passport) {
 			}
 		});
 	});
+
 
 	app.delete("/customers/:id", passport.authenticate('basic', { session: false }), function(req, res) {
 
