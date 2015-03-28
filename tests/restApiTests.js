@@ -21,9 +21,31 @@ var testingHost = "localhost",
  	customerWithMultipleSubscriptionsId = null,
  	truckWithSubscribersId = null,
  	subscribedCustomerName = "subscribedCustomerName",
- 	subscribedCustomerId = null;
+ 	subscribedCustomerId = null,
+	trucksToBePosted = [];
+ 	
 
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+
+ var deepCompareArrays = function(firstArray, secondArray) {
+ 	for (var firstArrayIndex = 0; firstArrayIndex < firstArray.length; firstArrayIndex++) {
+ 		var thisObject = firstArray[firstArrayIndex];
+ 		var thisObjectKeys = Object.keys(thisObject);
+ 		for (var thisObjectKey in thisObjectKeys) {
+ 			for (var secondArrayIndex = 0; secondArrayIndex < secondArray.length; secondArrayIndex++) {
+ 				var thatObject = secondArray[secondArrayIndex];
+ 				var thatObjectKeys = Object.keys(thatObject);
+ 				for (var thatObjectKey in thatObjectKeys) {
+ 					if (thisObject[thisObjectKey] !== [thatObject.thatObjectKey]) {
+ 						return false;
+ 					}
+ 				}
+ 			}
+ 		}
+ 	}
+ 	return true;
+ };
 
 
 describe('truck time rest api server', function() {
@@ -203,6 +225,28 @@ describe('truck time rest api server', function() {
 							callback();
 						}
 					});
+			},
+			function(callback) {
+				async.each(trucksToBePosted, function(currentTruck){
+					console.log("delete truck with this id: " + JSON.stringify(currentTruck));
+					superagent
+						.del("https://" + testingHost + ":" + testingPort + "/trucks/" + currentTruck.id)
+						.auth(testUserName, testUserPassword)
+						.end(function(err, res) {
+							if (err) {
+								callback(err);
+							} else {
+								expect(res.status).to.eql(200);
+								callback();
+							}
+						});
+					}, function(err) {
+						if (err) {
+							console.log(err);
+						}	
+
+					});
+				callback();
 			}
 		], function(err) {
 			if (err) {
@@ -272,8 +316,6 @@ describe('truck time rest api server', function() {
 			.get('https://' + testingHost + ":" + testingPort + "/customers/")
 			.auth('fakeUser', 'fakePassword')
 			.end(function(err, res){
-				console.log("res: " + res);
-				console.log("err: " + err);
 				expect(res.status).to.eql(403);
 				done();
 			});
@@ -384,5 +426,96 @@ describe('truck time rest api server', function() {
 
 		});
 	});
+
+
+
+	it('can successfully receive paginated results from the REST API', function(done) {
+
+		for (var currentIndex = 0; currentIndex < 20; currentIndex++) {
+			var currentTruckName = "truck" + currentIndex;
+			var currentTruck = {
+				name: currentTruckName
+			};
+			trucksToBePosted.push(currentTruck);
+		}
+
+		async.each(trucksToBePosted, function(truck, callback) {
+			superagent
+				.post("https://" + testingHost + ":" + testingPort + "/trucks/")
+				.auth(testUserName, testUserPassword)
+				.send(truck)
+				.end(function(err, res) {
+					expect(res.status).to.eql(201);
+					callback();
+				});
+		}, function(err) {
+			if (err) {
+				console.log("An error occurred while POSTing test trucks.");
+			} 
+		});
+
+		
+
+		var firstResultSet = null;
+		var secondResultSet = null;
+
+		async.series([
+			function(callback) {
+				superagent
+					.get("https://" + testingHost + ":" + testingPort + "/trucks?pageNumber=0")
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res) {
+						if (err) {
+							console.log("An error occurred while getting the first page of results.");
+						} else {
+							expect(res.body.length).to.eql(10);
+							firstResultSet = res.body;
+							callback();
+						}
+					});
+			},
+			function(callback) {
+				superagent
+					.get("https://" + testingHost + ":" + testingPort + "/trucks?pageNumber=1")
+					.auth(testUserName, testUserPassword)
+					.end(function(err, res){
+						if (err) { 
+							console.log(err);
+						} else {
+							expect(res.body.length).to.eql(10);
+							secondResultSet = res.body;
+							expect(deepCompareArrays(firstResultSet, secondResultSet)).to.eql(false);
+							expect(deepCompareArrays(secondResultSet, firstResultSet)).to.eql(false);
+							callback();
+						}
+					});
+			}
+		], function(err) {
+			if (err) {
+				console.log(err);
+			}
+			trucksToBePosted = firstResultSet.concat(secondResultSet);
+			done();
+		});
+
+	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 });
