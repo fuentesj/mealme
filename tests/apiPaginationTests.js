@@ -10,7 +10,8 @@ var superagent 	= require("superagent"),
 	 	testUserPassword = "abc12345",
 		trucksToBePosted = [],
 		firstResultSet = null,
-		secondResultSet = null;
+		secondResultSet = null
+		linkHeaderToSecondResultSet = null;
 
 	var deepCompareArrays = function(firstArray, secondArray) {
 	 	for (var firstArrayIndex = 0; firstArrayIndex < firstArray.length; firstArrayIndex++) {
@@ -100,6 +101,8 @@ var superagent 	= require("superagent"),
 							if (err) {
 								console.log(err);
 							} else {
+								var rawHeaderString = res.headers['link'];								
+								linkHeaderToSecondResultSet = rawHeaderString.replace(/(<)(\/trucks\?pageNumber=[0-9])(>.*)/, "$2");
 								expect(res.status).to.eql(200);
 								expect(res.body.length).to.eql(10);
 								firstResultSet = res.body;
@@ -109,7 +112,7 @@ var superagent 	= require("superagent"),
 				},
 				function(callback) {
 					superagent
-						.get("https://" + testingHost + ":" + testingPort + "/trucks?pageNumber=1")
+						.get("https://" + testingHost + ":" + testingPort + linkHeaderToSecondResultSet)
 						.auth(testUserName, testUserPassword)
 						.end(function(err, res) {
 							if (err) {
