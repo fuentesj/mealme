@@ -27,7 +27,7 @@ var testingHost = "localhost",
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 
-	describe('truck time rest api server', function() {
+	describe('TruckTime REST API should field basic HTTP requests properly', function() {
 
 
 		before("Set up test data before any test begins", function(done) {
