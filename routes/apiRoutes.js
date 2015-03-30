@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 
 		FoodTruck.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0 )}, function(err, truckCollection) {
 			if (err) {
-				return res.status(500).send(INTERNAL_ERROR_MSG);
+				return res.status(500).send();
 			} else {
 				console.log("type of pageNumber: " + typeof req.query.pageNumber);
 				return res
@@ -67,6 +67,18 @@ module.exports = function(app, passport) {
 
 	app.get("/customers", function(req, res) {
 
+		FoodTruckCustomer.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0)}, function(err, customerCollection) {
+			if (err) {
+				return res.status(500).send();
+			} else {
+				return res
+						.status(200)
+						.set({
+							'Link': '</customers?pageNumber=' + (parseInt(req.query.pageNumber) + 1) + '>;rel="next";'
+						})
+						.send(customerCollection);
+			}
+		});
 	});
 
 
