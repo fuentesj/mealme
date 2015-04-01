@@ -31,10 +31,9 @@ passport.use(new BasicStrategy(
 app.use(bodyParser.json());
 app.use(passport.initialize());
 require('./routes/apiRoutes.js')(app, passport);
-http.createServer(app).listen(8888);
 https.createServer({
 	key: fs.readFileSync('./ssl/key.pem'),
 	cert:fs.readFileSync('./ssl/cert.pem'),
-}, app).listen(8443);
+}, app).listen(process.env.PORT || 8443);
 
 
