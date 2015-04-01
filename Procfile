@@ -1,1 +1,2 @@
+web: mongod
 web: grunt
