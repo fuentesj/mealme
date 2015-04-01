@@ -8,7 +8,7 @@ var express 		= require("express"),
 	http 			= require('http'),
 	bodyParser 		= require('body-parser');
 
-mongoose.connect('mongodb://localhost/mealme');
+mongoose.connect((process.env.MONGOLAB_URI || 'mongodb://localhost/mealme'));
 
 var models = fs.readdirSync('./models');
 for (var i = 0; i < models.length; i++) {
