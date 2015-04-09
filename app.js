@@ -32,8 +32,8 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 require('./routes/apiRoutes.js')(app, passport);
 https.createServer({
-	key: fs.readFileSync('./ssl/key.pem'),
-	cert:fs.readFileSync('./ssl/cert.pem'),
-}, app).listen(process.env.PORT || 8443);
+	key: fs.readFileSync('../ssl/key.pem'),
+	cert:fs.readFileSync('../ssl/cert.pem'),
+}, app).listen(8443);
 
 
