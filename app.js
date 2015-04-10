@@ -27,7 +27,7 @@ passport.use(new BasicStrategy(
 		});
 	}
 ));
-
+//test comment
 app.use(bodyParser.json());
 app.use(passport.initialize());
 require('./routes/apiRoutes.js')(app, passport);
