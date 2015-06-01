@@ -13,7 +13,6 @@ module.exports = function(app, passport) {
 			if (err) {
 				return res.status(500).send();
 			} else {
-				console.log("type of pageNumber: " + typeof req.query.pageNumber);
 				return res
 					   	.status(200)
 					   	.set({
@@ -44,7 +43,6 @@ module.exports = function(app, passport) {
 		var foodTruck = new FoodTruck(req.body);
 		foodTruck.save(function(err, foodTruck) {
 			if (err) {
-				console.log("error: " + err);
 				return res.status(409).send(INTERNAL_ERROR_MSG);
 			} else {
 				return res.status(201).json({id: foodTruck.id});

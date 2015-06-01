@@ -21,7 +21,8 @@ var testingHost = "localhost",
  	customerWithMultipleSubscriptionsId = null,
  	truckWithSubscribersId = null,
  	subscribedCustomerName = "subscribedCustomerName",
- 	subscribedCustomerId = null;
+ 	subscribedCustomerId = null,
+ 	nonExistentTruckId = "41224d776a326fb40f000001";
  	
 
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -373,7 +374,6 @@ var testingHost = "localhost",
 								callback();
 							}
 						});
-
 				 }
 			], function(err) {
 				if (err) {
@@ -384,5 +384,17 @@ var testingHost = "localhost",
 
 			});
 		});
+
+		it('can get back an empty set and a 200 response when asking for a non-existent trucks', function(done) {
+			superagent
+				.get("https://" + testingHost + ":" + testingPort + "/trucks/" + nonExistentTruckId)
+				.auth(testUserName, testUserPassword)
+				.end(function(err, res) {
+					expect(res.status).to.eql(200);
+					expect(res.body).to.be.empty;
+					done();
+				});
+
+		})
 
 		});
