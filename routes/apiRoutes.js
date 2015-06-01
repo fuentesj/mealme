@@ -65,7 +65,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.get("/customers", function(req, res) {
+	app.get("/customers", passport.authenticate('basic', { session: false} ), function(req, res) {
 
 		FoodTruckCustomer.find({}, {}, {limit: resultCountPerPage, skip: (req.query.pageNumber > 0 ? resultCountPerPage : 0)}, function(err, customerCollection) {
 			if (err) {

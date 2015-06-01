@@ -10,7 +10,7 @@ var superagent 	= require("superagent"),
 	 	testUserPassword = "abc12345",
 		trucksToBePosted = [],
 		firstTruckResultSet = null,
-		secondTruckResultSet = null
+		secondTruckResultSet = null,
 		linkHeaderToSecondResultSet = null,
 		customersToBePosted = [],
 		firstCustomerResultSet = null,
@@ -78,7 +78,7 @@ var superagent 	= require("superagent"),
 				var currentCustomerName = "customer" + currentIndex;
 				var currentCustomer = {
 					name: currentCustomerName
-				}
+				};
 				customersToBePosted.push(currentCustomer);
 			}
 
@@ -89,7 +89,7 @@ var superagent 	= require("superagent"),
 					.send(customer)
 					.end(function(err, res) {
 						if (err) {
-							callback(err)
+							callback(err);
 						} else {
 							expect(res.status).to.eql(201);
 							callback();
@@ -97,7 +97,7 @@ var superagent 	= require("superagent"),
 					});
 				}, function(err) {
 					if (err) {
-						console.log(err)
+						console.log(err);
 					} else {
 						done();
 					}
@@ -162,7 +162,7 @@ var superagent 	= require("superagent"),
 							if (err) {
 								console.log(err);
 							} else {
-								var rawHeaderString = res.headers['link'];								
+								var rawHeaderString = res.headers.link;								
 								linkHeaderToSecondResultSet = rawHeaderString.replace(/(<)(\/trucks\?pageNumber=[0-9])(>.*)/, "$2");
 								expect(res.status).to.eql(200);
 								expect(res.body.length).to.eql(10);
@@ -206,7 +206,7 @@ var superagent 	= require("superagent"),
 							if (err) {
 								console.log(err);
 							} else {
-								var rawHeaderString = res.headers['link'];								
+								var rawHeaderString = res.headers.link;								
 								linkToSecondCustomerResultSet = rawHeaderString.replace(/(<)(\/customers\?pageNumber=[0-9])(>.*)/, "$2");
 								expect(res.status).to.eql(200);
 								expect(res.body.length).to.eql(10);

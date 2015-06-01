@@ -269,12 +269,12 @@ var testingHost = "localhost",
 		});
 
 
-		xit('can successfully stop an unauthorized user from making a API call', function(done){
+		it('can successfully stop an unauthorized user from making a API call', function(done){
 			superagent
 				.get('https://' + testingHost + ":" + testingPort + "/customers/")
 				.auth('fakeUser', 'fakePassword')
 				.end(function(err, res){
-					expect(res.status).to.eql(403);
+					expect(res.status).to.eql(401);
 					done();
 				});
 		});

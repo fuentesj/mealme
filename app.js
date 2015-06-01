@@ -21,8 +21,12 @@ var User = mongoose.model('User');
 passport.use(new BasicStrategy(
 	function(username, password, done) {
 		User.findOne({username: username, password: password}, function(err, user) {
-			if (err) { return done(err); }
-			if (!user) { return done(null, false); }
+			if (err) { 
+				return done(err);
+			}
+			if (!user) {
+			 	return done(null, false);
+			}
 			return done(null, user);
 		});
 	}
