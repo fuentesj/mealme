@@ -1,5 +1,5 @@
 # MealMe (soon to be renamed 'Truck Time')
-## What is it????
+## What is it?
 > The idea is two-fold: First, food truck lovers should be able to easily find favorite as well as discover new trucks. This can be a frustrating experience since different trucks use different platforms to publish their schedules and locations. A user may potentially have to use Yelp, Facebook, Twitter, and a truck owner's site in order to see the truck will be (and even then, the information could be outdated or conflicting)! MealMe aims to not only make this process painless, but easy & fun!
 
 > Second, food truck owners want to focus on their food. Time spent on social media is time that could be spent on serving customers their all-time favorites or crafting delicious new plates. MealMe also aspires to allow food truck owners publish their location(s) & schedule(s) on a single, uniform that all their customers will use. However, we recognize that social media will remaine an important marketing tool, so MealMe will allow truck owners to retain those channels by pushing updates to any services already used.
