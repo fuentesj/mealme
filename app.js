@@ -6,9 +6,10 @@ var express 		= require("express"),
 	fs 				= require("fs"),
 	https 			= require('https'),
 	http 			= require('http'),
-	bodyParser 		= require('body-parser');
+	bodyParser 		= require('body-parser')
+	config			= require("./config.js");
 
-mongoose.connect('mongodb://localhost/mealme');
+mongoose.connect(config.mongo.path);
 
 var models = fs.readdirSync('./models');
 for (var i = 0; i < models.length; i++) {
@@ -36,8 +37,8 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 require('./routes/apiRoutes.js')(app, passport);
 https.createServer({
-	key: fs.readFileSync('../ssl/key.pem'),
-	cert:fs.readFileSync('../ssl/cert.pem'),
+	key: fs.readFileSync(config.ssl.pkey),
+	cert:fs.readFileSync(config.ssl.cert),
 }, app).listen(8443);
 
 
