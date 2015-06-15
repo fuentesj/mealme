@@ -1,4 +1,4 @@
-var mongoose	= require('mongoose');
+var mongoose	= require("mongoose");
 var Schema 		= mongoose.Schema;
 
 var FoodTruckCustomerSchema = new Schema({
@@ -6,13 +6,13 @@ var FoodTruckCustomerSchema = new Schema({
 	last_known_location: {
 		type: {
 			type: String,
-			default: 'Point'
+			default: "Point"
 		},
 		coordinates: [Number]
 	},
 	truck_subscriptions: [{
 		type: Schema.Types.ObjectId,
-		ref: 'FoodTruck'
+		ref: "FoodTruck"
 	}]
 });
 

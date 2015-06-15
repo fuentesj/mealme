@@ -1,6 +1,6 @@
-var superagent 	= require('superagent'),
-	expect 		= require('expect.js'),
-	async		= require('async');
+var superagent 	= require("superagent"),
+	expect 		= require("expect.js"),
+	async		= require("async");
 
 var testingHost = "localhost",
 	testingPort = "8443",
@@ -28,7 +28,7 @@ var testingHost = "localhost",
  	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 
-	describe('TruckTime REST API should field basic HTTP requests properly', function() {
+	describe("TruckTime REST API should field basic HTTP requests properly", function() {
 
 
 		before("Set up test data before any test begins", function(done) {
@@ -220,7 +220,7 @@ var testingHost = "localhost",
 		});
 
 
-		it('can successfully GET an existing truck', function(done){
+		it("can successfully GET an existing truck", function(done){
 			superagent
 				.get("https://" + testingHost + ":" + testingPort + "/trucks/" + testTruckId)
 				.auth(testUserName, testUserPassword)
@@ -235,7 +235,7 @@ var testingHost = "localhost",
 		});
 
 
-		it('can successfully POST a new food truck', function(done){
+		it("can successfully POST a new food truck", function(done){
 			superagent
 				.post("https://" + testingHost + ":" + testingPort + "/trucks")
 				.auth(testUserName, testUserPassword)
@@ -248,7 +248,7 @@ var testingHost = "localhost",
 		});
 
 
-		it('can successfully GET a food truck customer', function(done){
+		it("can successfully GET a food truck customer", function(done){
 			superagent
 				.get("https://" + testingHost + ":" + testingPort + "/customers/" + testCustomerId)
 				.auth(testUserName, testUserPassword)
@@ -259,7 +259,7 @@ var testingHost = "localhost",
 		});
 
 		
-		it('can successfully POST a new food truck customer', function(done){
+		it("can successfully POST a new food truck customer", function(done){
 			superagent	
 				.post("https://" + testingHost + ":" + testingPort + "/customers/")
 				.auth(testUserName, testUserPassword)
@@ -272,10 +272,10 @@ var testingHost = "localhost",
 		});
 
 
-		it('can successfully stop an unauthorized user from making a API call', function(done){
+		it("can successfully stop an unauthorized user from making a API call", function(done){
 			superagent
-				.get('https://' + testingHost + ":" + testingPort + "/customers/")
-				.auth('fakeUser', 'fakePassword')
+				.get("https://" + testingHost + ":" + testingPort + "/customers/")
+				.auth("fakeUser", "fakePassword")
 				.end(function(err, res){
 					expect(res.status).to.eql(401);
 					done();
@@ -283,7 +283,7 @@ var testingHost = "localhost",
 		});
 
 
-		it('can successfully POST and GET a Customer with multiple food truck subcriptions', function(done){
+		it("can successfully POST and GET a Customer with multiple food truck subcriptions", function(done){
 
 			var subcriptions = [];
 			subcriptions.push(subscribedTruckId);
@@ -334,7 +334,7 @@ var testingHost = "localhost",
 		});
 
 
-		it('can successfully POST and GET a Food Truck with multiple subscribers', function(done){
+		it("can successfully POST and GET a Food Truck with multiple subscribers", function(done){
 
 			var subscribedCustomers = [];
 			subscribedCustomers.push(subscribedCustomerId);
@@ -387,7 +387,7 @@ var testingHost = "localhost",
 			});
 		});
 
-		it('can get back an empty set and a 200 response when asking for a non-existent trucks', function(done) {
+		it("can get back an empty set and a 200 response when asking for a non-existent trucks", function(done) {
 			superagent
 				.get("https://" + testingHost + ":" + testingPort + "/trucks/" + nonExistentTruckId)
 				.auth(testUserName, testUserPassword)

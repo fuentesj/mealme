@@ -6,7 +6,7 @@ var FoodTruckSchema = new Schema({
 	last_known_location: {
 		type: {
 			type: String,
-			default: 'Point'
+			default: "Point"
 		},
 		coordinates: [Number]
 	},
@@ -14,7 +14,7 @@ var FoodTruckSchema = new Schema({
 	closingTime: {type: Date},
 	subscribers: [{ 
 		type: Schema.Types.ObjectId,
-		ref: 'FoodTruckCustomer'
+		ref: "FoodTruckCustomer"
 	}]
 });
 
