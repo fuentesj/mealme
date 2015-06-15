@@ -54,7 +54,9 @@ var testingHost = "localhost",
 						.auth(testUserName, testUserPassword)
 						.send({
 							name: testTruckName,
-							last_known_location: [testTruckLat, testTruckLong]
+							last_known_location: {
+								coordinates: [testTruckLat, testTruckLong]
+							}
 						})
 						.end(function(err, res) {
 							if (err) {
@@ -224,7 +226,7 @@ var testingHost = "localhost",
 				.auth(testUserName, testUserPassword)
 				.end(function(err, res){
 					expect(res.body.name).to.eql(testTruckName);
-					var lastKnownLocationArray = res.body.last_known_location.split(",");
+					var lastKnownLocationArray = res.body.last_known_location.coordinates;
 					expect(lastKnownLocationArray[0]).to.eql(testTruckLat);
 					expect(lastKnownLocationArray[1]).to.eql(testTruckLong);
 					expect(res.status).to.eql(200);
@@ -391,10 +393,10 @@ var testingHost = "localhost",
 				.auth(testUserName, testUserPassword)
 				.end(function(err, res) {
 					expect(res.status).to.eql(200);
-					expect(res.body).to.be.empty;
+					expect(res.body.length).to.eql(0);
 					done();
 				});
 
-		})
+		});
 
 		});

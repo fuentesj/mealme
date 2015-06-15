@@ -4,7 +4,10 @@ var Schema 		= mongoose.Schema;
 var FoodTruckSchema = new Schema({
 	name: {type: String, required: true},
 	last_known_location: {
-		type: String,
+		type: {
+			type: String,
+			default: 'Point'
+		},
 		coordinates: [Number]
 	},
 	openingTime: {type: Date},

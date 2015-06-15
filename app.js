@@ -6,7 +6,7 @@ var express 		= require("express"),
 	fs 				= require("fs"),
 	https 			= require('https'),
 	http 			= require('http'),
-	bodyParser 		= require('body-parser')
+	bodyParser 		= require('body-parser'),
 	config			= require("./config.js");
 
 mongoose.connect(config.mongo.path);
