@@ -2,7 +2,10 @@ var mongoose	= require("mongoose");
 var Schema 		= mongoose.Schema;
 
 var FoodTruckCustomerSchema = new Schema({
-	name: {type: String, required: true},
+	name: {
+		type: String,
+		required: true
+	},
 	last_known_location: {
 		type: {
 			type: String,
