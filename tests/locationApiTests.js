@@ -31,9 +31,9 @@ var sanDiegoTruck = {
 };
 
 var trucksArrays = [];
-trucksArrays.append(orangeCountyTruck);
-trucksArrays.append(losAngelesTruck);
-trucksArrays.append(sanDiegoTruck);
+trucksArrays.push(orangeCountyTruck);
+trucksArrays.push(losAngelesTruck);
+trucksArrays.push(sanDiegoTruck);
 
 
 
@@ -49,14 +49,7 @@ trucksArrays.append(sanDiegoTruck);
 					.send()
 					.end(function(err, res) {
 						
-					})
-			})
-
-
-		})
-
-
-
-
-
-	})
+				});
+			});
+		});
+	});
